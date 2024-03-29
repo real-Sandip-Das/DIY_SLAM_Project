@@ -1,4 +1,7 @@
+import socket_py as sck
 import tkinter as tk
+
+sck.__main__()
 
 root = tk.Tk()
 root.title("Robot Control Demo")
@@ -26,6 +29,7 @@ def key_press(event):
                 key_state[k] = False
                 canvas.itemconfig(key_squares[k], fill="white")
         canvas.itemconfig(key_squares[key], fill=fill_color)
+        sck.send(cur_key)
         print(cur_key) #printing the current state for debugging purposes
 
 # Create squares and labels
