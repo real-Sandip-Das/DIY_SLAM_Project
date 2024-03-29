@@ -20,28 +20,6 @@ void motor_setup(int m1p1, int m1p2, int m2p1, int m2p2, int m1speed, int m2spee
   analogWrite(9, speed);
 }
 
-void motor_loop(char state) {
-  // put your main code here, to run repeatedly:
-
-  if (state == 'J') {
-    halt();
-    //Serial.println("Halt");
-  } else if (state == 'S') {
-    backward();
-    //Serial.println("Back");
-  } else if (state == 'W') {
-    forward();
-    //Serial.println("Forward");
-  } else if (state == 'D') {
-    left();
-    //Serial.println("Left");
-  } else if (state == 'A') {
-    right();
-    //Serial.println("Right");
-
-    // forward();
-    //right();
-  }
 void forward() {
   analogWrite(m1speed, speed);
   analogWrite(m2speed, speed);
@@ -83,6 +61,28 @@ void halt() {
   analogWrite(m2speed, 0);
 }
 
+void motor_loop(char state) {
+  // put your main code here, to run repeatedly:
+
+  if (state == 'J') {
+    halt();
+    //Serial.println("Halt");
+  } else if (state == 'S') {
+    backward();
+    //Serial.println("Back");
+  } else if (state == 'W') {
+    forward();
+    //Serial.println("Forward");
+  } else if (state == 'D') {
+    left();
+    //Serial.println("Left");
+  } else if (state == 'A') {
+    right();
+    //Serial.println("Right");
+
+    // forward();
+    //right();
+  }
 
 
 }
