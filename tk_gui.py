@@ -1,8 +1,6 @@
 import socket_py as sck
 import tkinter as tk
 
-sck.__main__()
-
 root = tk.Tk()
 root.title("Robot Control Demo")
 
