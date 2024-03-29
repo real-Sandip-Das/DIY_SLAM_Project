@@ -24,8 +24,8 @@ void motor_loop(char state) {
   // put your main code here, to run repeatedly:
 
   if (state == 'J') {
-    halt(); 
-             //Serial.println("Halt");
+    halt();
+    //Serial.println("Halt");
   } else if (state == 'S') {
     backward();
     //Serial.println("Back");
@@ -42,7 +42,6 @@ void motor_loop(char state) {
     // forward();
     //right();
   }
-
 void forward() {
   analogWrite(m1speed, speed);
   analogWrite(m2speed, speed);
@@ -83,5 +82,7 @@ void halt() {
   analogWrite(m1speed, 0);
   analogWrite(m2speed, 0);
 }
+
+
 
 }
