@@ -36,19 +36,27 @@ Serial.println(UDP_PORT);
 void loop() {
 
   int packetSize = UDP.parsePacket();
-  if(packetSize) {
-    Serial.print("Recieved Packet Size:");
-    Serial.println(packetSize);
-    int len = UDP.read(packet, 255);
-    if (len>0){
-      packet[len] = '\0';
-    }
-    Serial.print("Packet recieved");
-    Serial.println(packet);
+  // if(packetSize) {
+  //   Serial.print("Recieved Packet Size:");
+  //   Serial.println(packetSize);
+  //   int len = UDP.read(packet, 255);
+  //   if (len>0){
+  //     packet[len] = '\0';
+  //   }
+  //   Serial.print("Packet recieved");
+  //   Serial.println(packet);
 
-    UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
-    UDP.write(reply);
-    UDP.endPacket();
-  }
+  //   UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
+  //   UDP.write(reply);
+  //   UDP.endPacket();
+  //}
+  
+  // Check if there is data available to read from NodeMCU
+  if (Serial.available() > 0) {
+    // Read the incoming byte from NodeMCU
+    char incomingByte = Serial.read();
     
+    // Send the incoming byte to another Arduino via serial connection
+    Serial.write(incomingByte); // Assuming you're using Serial1 for communication with the other Arduino
+  }
 }
