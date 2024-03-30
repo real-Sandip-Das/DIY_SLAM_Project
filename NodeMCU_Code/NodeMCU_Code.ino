@@ -36,21 +36,19 @@ Serial.println(UDP_PORT);
 void loop() {
 
   int packetSize = UDP.parsePacket();
-  // if(packetSize) {
-  //   Serial.print("Recieved Packet Size:");
-  //   Serial.println(packetSize);
-  //   int len = UDP.read(packet, 255);
-  //   if (len>0){
-  //     packet[len] = '\0';
-  //   }
-  //   Serial.print("Packet recieved");
-  //   Serial.println(packet);
+  if(packetSize) {
+    Serial.print("Recieved Packet Size:");
+    Serial.println(packetSize);
+    int len = UDP.read(packet, 255);
+    if (len>0){
+      packet[len] = '\0';
+    }
+    Serial.print("Packet recieved");
+    Serial.println(packet);
 
-  //   UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
-  //   UDP.write(reply);
-  //   UDP.endPacket();
-  //}
-  
-  // Check if there is data available to read from NodeMCU
-
+    UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
+    UDP.write(reply);
+    UDP.endPacket();
+  }
+    
 }
