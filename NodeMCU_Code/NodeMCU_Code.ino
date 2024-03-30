@@ -52,11 +52,5 @@ void loop() {
   //}
   
   // Check if there is data available to read from NodeMCU
-  if (Serial.available() > 0) {
-    // Read the incoming byte from NodeMCU
-    char incomingByte = Serial.read();
-    
-    // Send the incoming byte to another Arduino via serial connection
-    Serial.write(incomingByte); // Assuming you're using Serial1 for communication with the other Arduino
-  }
+
 }

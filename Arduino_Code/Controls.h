@@ -6,7 +6,7 @@ const int m1speed = 8;
 const int m2speed = 9;
 const int speed = 255;
 
-void motor_setup(int m1p1, int m1p2, int m2p1, int m2p2, int m1speed, int m2speed) {
+void motor_setup() {
   // put your setup code here, to run once:
   pinMode(m1p1, OUTPUT);
   pinMode(m1p2, OUTPUT);
@@ -83,6 +83,4 @@ void motor_loop(char state) {
     // forward();
     //right();
   }
-
-
 }
