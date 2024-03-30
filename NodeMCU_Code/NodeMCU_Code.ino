@@ -6,7 +6,7 @@
 #define UDP_PORT 4210
 
 WiFiUDP UDP;
-char packet[255];
+char packet[256];
 
 void setup() {
   scan_setup(); //sets up the Ultrasonic Sensor for Measuring Distances
