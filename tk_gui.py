@@ -1,8 +1,10 @@
 import socket_py as sck
 import tkinter as tk
 
+UDP_object = sck.UDP_connection()
+
 root = tk.Tk()
-root.title("Robot Control Demo")
+root.title("Robot Control Window")
 
 canvas = tk.Canvas(root, width=200, height=200)
 canvas.pack()
@@ -27,7 +29,7 @@ def key_press(event):
                 key_state[k] = False
                 canvas.itemconfig(key_squares[k], fill="white")
         canvas.itemconfig(key_squares[key], fill=fill_color)
-        sck.send(cur_key)
+        UDP_object.send(cur_key)
         print(cur_key) #printing the current state for debugging purposes
 
 # Create squares and labels
@@ -40,4 +42,5 @@ for key, (x, y) in zip(key_squares, [(75, 25), (25, 75), (75, 75), (125, 75)]):
 root.bind("<KeyPress>", key_press)
 
 print(cur_key)
+UDP_object.send(cur_key)
 root.mainloop()
