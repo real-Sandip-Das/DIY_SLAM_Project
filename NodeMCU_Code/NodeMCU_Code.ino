@@ -7,48 +7,34 @@
 
 WiFiUDP UDP;
 char packet[255];
-char reply[] = "Packet Recieved!";
 
 void setup() {
-   
+  scan_setup(); //sets up the Ultrasonic Sensor for Measuring Distances
   Serial.begin(9600);
-  Serial.println();
-  
+  //try connecting to WiFi Hotspot
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-  Serial.print("Connecting to ");
-  Serial.print(WIFI_SSID);
-
-  while (WiFi.status() !=WL_CONNECTED){
+  while (WiFi.status() != WL_CONNECTED) {
     delay(100);
-    Serial.print("."); 
   }
-Serial.println();
-Serial.print("Connected IP address: ");
-Serial.print(WiFi.localIP());
-
-UDP.begin(UDP_PORT);
-Serial.print("Listening on UDP port");
-Serial.println(UDP_PORT);
-
+  //connected to WiFi
+  UDP.begin(UDP_PORT);
 }
 
 void loop() {
-
-  int packetSize = UDP.parsePacket();
-  if(packetSize) {
-    Serial.print("Recieved Packet Size:");
-    Serial.println(packetSize);
-    int len = UDP.read(packet, 255);
-    if (len>0){
+  int packetSize = UDP.parsePacket(); //Parse Packet received over UDP
+  if (packetSize) {
+    int len = UDP.read(packet, 255); //Read Packet received over UDP
+    if (len > 0) {
       packet[len] = '\0';
     }
-    Serial.print("Packet recieved");
-    Serial.println(packet);
 
-    UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
-    UDP.write(reply);
-    UDP.endPacket();
+    if (packet == "Q") {
+      //If the Packet reads 'Q' then scan using Servo Motor and Ultrasonic sensor
+      scan(UDP);
+    } else {
+      //If the Packet reads 'W', 'A', 'S' or 'D', then move accordingly, else, if 'J' then wait
+      Serial.print(packet);
+    }
   }
-    
 }
