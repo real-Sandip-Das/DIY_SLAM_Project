@@ -2,8 +2,6 @@ import socket
 
 SELF_IP = "0.0.0.0"  # Listen on all available interfaces
 UDP_PORT = 4210
-#ESP_IP = "192.168.137.164" #Windows Hotspot
-#ESP_IP = "10.42.0.106" #Linux Hotspot
 
 class UDP_connection:
     def __init__(self):
