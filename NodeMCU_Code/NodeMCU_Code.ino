@@ -1,5 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUDP.h>
+#include "WiFi.h"
+#include "Scan.h"
 
 #define UDP_PORT 4210
 
@@ -21,7 +23,7 @@ void setup() {
   IPAddress ip = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(ip);
-  Serial.print("Local IP: ")
+  Serial.print("Local IP: ");
   Serial.print(WiFi.localIP());
   UDP.begin(UDP_PORT);
 }
