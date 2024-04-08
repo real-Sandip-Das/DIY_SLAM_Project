@@ -56,3 +56,27 @@ root.bind("<KeyPress>", key_press)
 print(cur_key)
 UDP_object.send(cur_key)
 root.mainloop()
+
+#slider
+scale_int = tk.IntVar(value = 10)
+scale= ttk.Scale(
+    window,
+    command = lambda value: print(scale_int.get()),
+    from_ = 0,
+    to = 20,
+    length = 200,
+    orient ='horizontal',
+    variable = scale_int)
+scale.pack()
+
+#progress bar
+progress = ttk.Progressbar(
+    window,
+    variable = scale_int,
+    maximum = 20,
+    orient = 'vertical',
+    length = '15')
+
+
+#run
+window.mainloop()
