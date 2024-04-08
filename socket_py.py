@@ -7,7 +7,7 @@ class UDP_connection:
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((SELF_IP, UDP_PORT))
-        self.addr = "" #TODO: Add the IP Address of the WiFi Module Access Point from Aditya's Laptop
+        self.addr = "192.168.4.1"
         print("UDP server listening...")
 
     def receive(self):
