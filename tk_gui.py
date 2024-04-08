@@ -1,7 +1,7 @@
+from gui_visualizer import SLAM_Map
 import socket_py as sck
 import tkinter as tk
 import tkinter as tk
-from tkinter import ttk
 
 
 UDP_object = sck.UDP_connection()
@@ -14,16 +14,32 @@ canvas.pack()
 
 #TODO: measure the time taken by the car to rotate ninety degrees
 
+def read_linear_distance():
+    UDP_object.send('M')
+    message = UDP_object.receive()
+    _, dist_str = message.split(' ')
+    return float(dist_str)
+
 key_squares = {'W': None, 'A': None, 'S': None, 'D': None} # Dictionary to map keys to squares
-key_state = {'W':False, 'A':False, 'S': False, 'D': False}
-cur_key = 'Q'
+key_state = {'W': None, 'A': None, 'S': None, 'D': None}
+key_linear_movement = ['W', 'S']
+key_rotational_movement = ['A', 'D']
+cur_key = 'J'
+
+first_key_press = True
 
 # Function to handle key press events
 def key_press(event):
-    #TODO:check whether the last movement was rotation, if so
-    # make the robot do another scan here
+    global Map
+    global first_key_press
     key = event.char.upper()
     if key in key_squares:
+        if first_key_press:
+            UDP_object.send('Q')
+            Map.scan(UDP_object, False)
+            global lin_dist
+            lin_dist = read_linear_distance()
+            cur_movement_mode = key_linear_movement
         key_state[key] ^= True
         if key_state[key]:
             fill_color = "gray"
@@ -36,13 +52,23 @@ def key_press(event):
                 key_state[k] = False
                 canvas.itemconfig(key_squares[k], fill="white")
         canvas.itemconfig(key_squares[key], fill=fill_color)
-        if(cur_key == 'A' or cur_key == 'D'):
-            #TODO: Make the robot do a scan first and then let it continue
-            #TODO: Modify the Arduino Code such that 'A' or 'D' results in approx ninety degree rotation
-            UDP_object.send('M')
-            UDP_object.send('Q')
+        if cur_key == 'J':
+            if cur_movement_mode == key_linear_movement:
+                cur_dist = read_linear_distance()
+                Map.robot.move_linear(lin_dist-cur_dist)
+                lin_dist = cur_dist
+            Map.scan(UDP_object, True)
+        if cur_key in key_linear_movement:
+            cur_movement_mode = key_linear_movement
+        if cur_key in key_rotational_movement:
+            if cur_key == 'A':
+                Map.robot.rotate(90)
+            elif cur_key == 'D':
+                Map.robot.rotate(-90)
+            cur_movement_mode = key_rotational_movement
         UDP_object.send(cur_key)
         print(cur_key) #printing the current state for debugging purposes
+        first_key_press = False
 
 # Create squares and labels
 for key, (x, y) in zip(key_squares, [(75, 25), (25, 75), (75, 75), (125, 75)]):
@@ -53,30 +79,7 @@ for key, (x, y) in zip(key_squares, [(75, 25), (25, 75), (75, 75), (125, 75)]):
 # Bind key press and release events
 root.bind("<KeyPress>", key_press)
 
+Map = SLAM_Map()
 print(cur_key)
 UDP_object.send(cur_key)
 root.mainloop()
-
-#slider
-scale_int = tk.IntVar(value = 10)
-scale= ttk.Scale(
-    window,
-    command = lambda value: print(scale_int.get()),
-    from_ = 0,
-    to = 20,
-    length = 200,
-    orient ='horizontal',
-    variable = scale_int)
-scale.pack()
-
-#progress bar
-progress = ttk.Progressbar(
-    window,
-    variable = scale_int,
-    maximum = 20,
-    orient = 'vertical',
-    length = '15')
-
-
-#run
-window.mainloop()
