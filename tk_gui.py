@@ -1,5 +1,8 @@
 import socket_py as sck
 import tkinter as tk
+import tkinter as tk
+from tkinter import ttk
+
 
 UDP_object = sck.UDP_connection()
 
