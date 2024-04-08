@@ -4,24 +4,27 @@ import cv2 as cv
 angle_limit = 180
 image_length = 1280 #along x direction
 image_width = 720 #along y direction
-scale = 10
+scale = 10 #centimeters(in the real world) per pixel length
+sensor_dist_cm = 2 #TODO: measure the distance of the sensor to the midpoint of the 2 wheels
 
 def round_up(x: float) -> int:
     return int(np.floor(x+0.5))
 
 class State:
-    #TODO: modify the code to take into consideration the fact that
-    #the ultrasonic sensor is actually not the middle point of the two motors
     def __init__(self):
         self.x = 1280//2
         self.y = 720//2
         self.theta_deg = 0 #zero means along +ve x axis, ninety means along +ve y axis
+        #position of the midpoint of the two wheels
+        #self.theta_deg: orientation of the line joining (self.x, self.y) and the Sensor's position
+        self.sensor_dist = scale*sensor_dist_cm
         self.map = np.zeros((image_width, image_length, 3), dtype=np.uint8)
     def plot(self, theta_rel_deg, dist, is_temporary: bool):
         theta_abs_deg = (self.theta_deg+theta_rel_deg)%360
         theta_abs_rad = theta_abs_deg*np.pi/180
-        point_x = round_up(self.x+dist*np.cos(theta_abs_rad))
-        point_y = round_up(self.y+dist*np.sin(theta_abs_rad))
+        self_theta_rad = self.theta_deg*np.pi/180
+        point_x = round_up(self.x+self.sensor_dist*np.cos(self_theta_rad)+dist*np.cos(theta_abs_rad))
+        point_y = round_up(self.y+self.sensor_dist*np.sin(self_theta_rad)+dist*np.sin(theta_abs_rad))
         if is_temporary:
             cv.circle(self.temp_map, (point_x, point_y), 1, (0, 0, 255), thickness=1)
         else:
