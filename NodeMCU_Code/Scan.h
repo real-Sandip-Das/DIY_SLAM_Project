@@ -5,10 +5,12 @@ const int echoPin = D2;
 
 //define sound velocity in cm/microsecond
 #define SOUND_VELOCITY 0.034
+#define SERVO_TIME_INTERVAL_MilliS 1000
+#define ANGLE_INTERVAL 10
 
 char message[50];
 
-void send_message(char[] message_arg, WiFiUDP UDP) {
+void send_message(char message_arg[], WiFiUDP UDP) {
   //Function to send string message 'message_arg' over UDP
   UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
   UDP.write(message_arg);
@@ -21,6 +23,7 @@ void scan_setup() {
 }
 
 void scan_angle(int angle_degrees, WiFiUDP UDP) {
+  delay(SERVO_TIME_INTERVAL_MilliS);
   double distanceCm;
   long duration;
   // Clears the trigPin
@@ -39,23 +42,23 @@ void scan_angle(int angle_degrees, WiFiUDP UDP) {
 
   //send the information(angle & distance) over UDP
   delay(60);
-  sprintf(message, "%d %f", i, dist);
+  sprintf(message, "%d %f", angle_degrees, distanceCm);
   send_message(message, UDP);
 }
 
 void scan(WiFiUDP UDP) {
-  for (int i = 90; i > 0; i--) {
+  for (int i = 90; i > 0; i-=ANGLE_INTERVAL) {
     scan_angle(i, UDP);
-    serial.print('p');  //assuming counterclockwise convention
+    Serial.print('p');  //assuming counterclockwise convention
   }
   //i = 0
-  for (int i = 0; i < 180; i++) {
+  for (int i = 0; i < 180; i+=ANGLE_INTERVAL) {
     scan_angle(i, UDP);
-    serial.print('n');
+    Serial.print('N');
   }
   //i = 180
   for (int i = 180; i > 90; i--) {
     scan_angle(i, UDP);
-    serial.print('p')
+    Serial.print('P');
   }
 }
