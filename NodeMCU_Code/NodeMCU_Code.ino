@@ -1,7 +1,12 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUDP.h>
+#include <SoftwareSerial.h>
+#define STX D1
+#define SRX D2
 #include "WiFi.h"
 #include "Scan.h"
+
+SoftwareSerial mySerial(SRX, STX);
 
 #define UDP_PORT 4210
 
@@ -12,7 +17,7 @@ const char *ssid = "NodeMCU_AP";      // SSID of the NodeMCU hotspot
 const char *password = "password123"; // Password for the NodeMCU hotspot
 
 void setup() {
-  Serial.begin(9600);
+  mySerial.begin(9600);
   IPAddress local_IP(192, 168, 4, 22);
   IPAddress gateway(192, 168, 4, 9);
   IPAddress subnet(255, 255, 255, 0);
@@ -21,10 +26,12 @@ void setup() {
   WiFi.softAP(ssid, password);
 
   IPAddress ip = WiFi.softAPIP();
+  /*
   Serial.print("AP IP address: ");
   Serial.println(ip);
   Serial.print("Local IP: ");
   Serial.print(WiFi.localIP());
+  */
   UDP.begin(UDP_PORT);
 }
 
@@ -40,7 +47,7 @@ void loop() {
       scan(UDP);
     } else {
       //If the Packet reads 'W', 'A', 'S' or 'D', then move accordingly, else, if 'J' then wait
-      Serial.print(packet);
+      mySerial.print(packet);
     }
   }
 }
