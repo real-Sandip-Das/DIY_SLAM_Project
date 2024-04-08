@@ -9,12 +9,16 @@ root.title("Robot Control Window")
 canvas = tk.Canvas(root, width=200, height=200)
 canvas.pack()
 
+#TODO: measure the time taken by the car to rotate ninety degrees
+
 key_squares = {'W': None, 'A': None, 'S': None, 'D': None} # Dictionary to map keys to squares
 key_state = {'W':False, 'A':False, 'S': False, 'D': False}
-cur_key = 'J'
+cur_key = 'Q'
 
 # Function to handle key press events
 def key_press(event):
+    #TODO:check whether the last movement was rotation, if so
+    # make the robot do another scan here
     key = event.char.upper()
     if key in key_squares:
         key_state[key] ^= True
@@ -29,6 +33,11 @@ def key_press(event):
                 key_state[k] = False
                 canvas.itemconfig(key_squares[k], fill="white")
         canvas.itemconfig(key_squares[key], fill=fill_color)
+        if(cur_key == 'A' or cur_key == 'D'):
+            #TODO: Make the robot do a scan first and then let it continue
+            #TODO: Modify the Arduino Code such that 'A' or 'D' results in approx ninety degree rotation
+            UDP_object.send('M')
+            UDP_object.send('Q')
         UDP_object.send(cur_key)
         print(cur_key) #printing the current state for debugging purposes
 

@@ -10,6 +10,8 @@ def round_up(x: float) -> int:
     return int(np.floor(x+0.5))
 
 class State:
+    #TODO: modify the code to take into consideration the fact that
+    #the ultrasonic sensor is actually not the middle point of the two motors
     def __init__(self):
         self.x = 1280//2
         self.y = 720//2
